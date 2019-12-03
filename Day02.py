@@ -1,7 +1,7 @@
 class GravityAssist:
 
     def __init__(self, n, v):
-        self.program_storage = [int(i) for i in open('input.txt', 'r').read().split(',')]
+        self.program_storage = [int(i) for i in open('Day02_input.txt', 'r').read().split(',')]
         self.program = self.program_storage[:]
         self.program[1] = n
         self.program[2] = v
