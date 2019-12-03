@@ -1,17 +1,44 @@
-inputs = [1, 0, 0, 3, 1, 1, 2, 3, 1, 3, 4, 3, 1, 5, 0, 3, 2, 10, 1, 19, 1, 19, 9, 23, 1, 23, 6, 27, 1, 9, 27, 31, 1, 31,
-          10, 35, 2, 13, 35, 39, 1, 39, 10, 43, 1, 43, 9, 47, 1, 47, 13, 51, 1, 51, 13, 55, 2, 55, 6, 59, 1, 59, 5, 63,
-          2, 10, 63, 67, 1, 67, 9, 71, 1, 71, 13, 75, 1, 6, 75, 79, 1, 10, 79, 83, 2, 9, 83, 87, 1, 87, 5, 91, 2, 91, 9,
-          95, 1, 6, 95, 99, 1, 99, 5, 103, 2, 103, 10, 107, 1, 107, 6, 111, 2, 9, 111, 115, 2, 9, 115, 119, 2, 13, 119,
-          123, 1, 123, 9, 127, 1, 5, 127, 131, 1, 131, 2, 135, 1, 135, 6, 0, 99, 2, 0, 14, 0]
-inputs[1] = 12
-inputs[2] = 2
+class GravityAssist:
 
-for i in range(0, len(inputs), 4):
-    if inputs[i] == 1:
-        inputs[inputs[i + 3]] = inputs[inputs[i + 1]] + inputs[inputs[i + 2]]
-    elif inputs[i] == 2:
-        inputs[inputs[i + 3]] = inputs[inputs[i + 1]] * inputs[inputs[i + 2]]
-    elif inputs[i] == 99:
-        break
+    def __init__(self, n, v):
+        self.program_storage = [int(i) for i in open('input.txt', 'r').read().split(',')]
+        self.program = self.program_storage[:]
+        self.program[1] = n
+        self.program[2] = v
+        self.processing = True
+        self.idx = 0
 
-print(inputs[0])
+    @property
+    def int_code_switch(self):
+        return {1: lambda x, y: x + y, 2: lambda x, y: x * y}
+
+    def int_code_program(self, program, opcode, n, v, position):
+        try:
+            program[position] = self.int_code_switch[opcode](self.program[n], self.program[v])
+        except KeyError:
+            self.processing = False
+
+    def run(self, program):
+        while self.processing:
+            self.int_code_program(program, *self.program[self.idx:self.idx + 4])
+            self.idx += 4
+
+        self.set_default_states()
+        return program[0]
+
+    def set_default_states(self):
+        self.program = self.program_storage[:]
+        self.processing = True
+        self.idx = 0
+
+
+if __name__ == '__main__':
+    g = GravityAssist(12, 2)
+    print(g.run(g.program))
+
+    for verb in range(99):
+        for noun in range(99):
+            g.program[1] = verb
+            g.program[2] = noun
+            if g.run(g.program) == 19690720:
+                print(100 * verb + noun)
