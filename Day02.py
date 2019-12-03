@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     for verb in range(99):
         for noun in range(99):
-            g.program[1] = verb
-            g.program[2] = noun
+            g.program[1] = noun
+            g.program[2] = verb
             if g.run(g.program) == 19690720:
-                print(100 * verb + noun)
+                print(100 * noun + verb)
