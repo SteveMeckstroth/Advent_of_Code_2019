@@ -50,7 +50,7 @@ class CrossedWires:
             plt.scatter(x, y)
             # Annotate the Manhattan Distance
             man_d = abs(x) + abs(y)
-            if(man_d < min_man_d) & man_d > 0:
+            if(man_d < min_man_d) & (man_d > 0):
                 min_man_d = man_d
                 min_man_d_pt = p
         # Plot the point with lowest man_d
@@ -59,8 +59,25 @@ class CrossedWires:
         plt.show()
 
     def part2(self):
-
+        points = [0, 1]
+        tot_points = [0, 1]
+        min_total_points = 9999999999
+        for i in self.intersections:
+            if i != (0, 0):
+                for idx in range(0, 2, 1):
+                    points[idx] = 0
+                    for p in self.line[idx]["points"]:
+                        if p != (0, 0):
+                            points[idx] = points[idx] + 1
+                            if p == i:
+                                print("points until intersection line {2} {0} : {1}".format(p, points[idx], idx))
+                                tot_points[idx] = points[idx]
+                                break
+                if tot_points[0] + tot_points[1] < min_total_points:
+                    min_total_points = tot_points[0] + tot_points[1]
+                    min_intersection = i
         print(self.intersections)
+        print(f"Min intersection: {min_intersection} with {min_total_points} points")
 
     def get_line_coords(self, line_idx):
         line = self.lines[line_idx]
@@ -78,7 +95,7 @@ class CrossedWires:
 
         new_coord = x, y
 
-        self.line[line_idx]["points"].append(new_coord)
+        # self.line[line_idx]["points"].append(new_coord)
 
         for m in range(interval, magnitude + 1, interval):
             if d == "U":
